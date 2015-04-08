@@ -37,6 +37,10 @@ PImage opo4X;
 PImage opo5;
 PImage opo55;
 PImage opo5X;
+PImage opo1flag;
+PImage opo2flag;
+PImage opo3flag;
+PImage opo4flag;
 PImage intro;
 PImage badge;
 PImage b1;
@@ -46,6 +50,9 @@ PImage instructtext;
 PImage dash;
 PImage youlose;
 PImage youlosetext;
+PImage controls;
+PImage townB;
+PImage townG;
 
 Serial myPort;
 String val="5";
@@ -57,7 +64,7 @@ int TWOescape=0;
 int THREEescape=0;
 int FOURescape=0;
 int FIVEescape=0;
-int counter=0;
+int counter=-1;
 float yesorno;
 float fromVal=1;
 
@@ -96,9 +103,17 @@ void setup() {
   opo5 = loadImage("Opo5.png");
   opo55 = loadImage("Opo55.png");
   opo5X = loadImage("Opo5X.png");
+  opo1flag= loadImage("Opo1flag.png");
+  opo2flag= loadImage("Opo2flag.png");
+  opo3flag= loadImage("Opo3flag.png");
+  opo4flag= loadImage("Opo4flag.png");
  dash = loadImage ("dash.png");
  youlose = loadImage ("youlose.jpg");
  youlosetext= loadImage ("youlosetext.png");
+ controls= loadImage ("controls.png");
+ townB= loadImage ("townB.jpg");
+ townG=loadImage ("townG.jpg");
+ 
  image(town,0,0,1450,900);
  float counter;
  m = new Minim(this);
@@ -115,29 +130,8 @@ void draw() {
     counter=119;
   }
   
-  if (mousePressed == true && roundcounter==6){
-    delay(1000);
-    countdown();
-    if (badcop>goodcop){
-        image(town,0,0,1450,900);
-        image(bB1, 500,200);
-        counter=0;
-    }
-     if (badcop<goodcop){
-        image(town,0,0,1450,900);
-        image(b1, 500,200);
-        counter=0;
-    }
-     if (badcop==goodcop){
-        image(town,0,0,1450,900);
-        image(badge, 500,200);
-        counter=0;
-    }
-    countdown();
-  }
       
-    
-  
+   
   if (mousePressed == true && startmusic==0){
   startmusic++;
   west.play(3);
@@ -146,7 +140,10 @@ void draw() {
    if ( myPort.available() > 0) 
   val = myPort.readStringUntil('\n');         // read it and store it in val
 
- 
+ if (counter==0){
+   image(controls,400,25,600,800);
+ }
+   
  if (mousePressed == true | counter==119 | counter==6){
    
    delay(1000);
@@ -167,7 +164,13 @@ void draw() {
    yesorno= random(5);
    println(yesorno); 
    
-   image(town,0,0,1450,900);
+   if (yesorno<=2.5){
+     image(townG,0,0,1450,900);
+   }
+   if (yesorno>2.5){
+     image(townB,0,0,1450,900);
+   }
+     
    
    if (roundcounter==1)//images progress by round to next OPO
    image(opo1, 500, 200);//
@@ -178,7 +181,7 @@ void draw() {
    if (roundcounter==4)//
    image(opo4, 250,450,450,450);//
    if (roundcounter==5)//
-   image(opo5, 500,200,650,650);//
+   image(opo5, 525,300,350,350);//
    
    if (roundcounter==1)
    image(instructtext, 175, 700);
@@ -198,12 +201,10 @@ if (counter==3){
    image(opo5, 500,200,400,400);//
    
    println("countdown");
-   countdown();
+   
    cntdwn.rewind();
    cntdwn.play();
    println("54321 playing");
-   println("countdownfast");
-   countdownfast();
    counter++;
   } 
   
@@ -232,31 +233,31 @@ if (counter==3){
   println("VAL" + val + " VAL INT " + fromVal);
    if (counter==4 && fromVal>=950 & fromVal!=5000.00){//if peacefulOPO and surrender  
  //removed countdown here
+   image(town,0,0,1450,900);
    if (roundcounter==1)//images progress by round to next OPO
-   image(opo1X, 500, 200);//
+   image(opo1flag, 500, 200);//
    if (roundcounter==2)//
-   image(opo2X, 300, 300,200,300);//
+   image(opo2flag, 300, 300,200,300);//
    if (roundcounter==3)//
-   image(opo3X, 700,400,450,450);//
+   image(opo3flag, 700,400,450,450);//
     if (roundcounter==4)//
-   image(opo4X, 750,450,450,450);//
+   image(opo4flag, 750,450,450,450);//
    if (roundcounter==5)//
    image(opo5X, 500,200,400,400);//
     
     println("peaceful surrender");
-    countdownfast();
+    
     ONEgot=1;
     counter=1;
     roundcounter++;
     goodcop++;
   }
   if (counter==4 && fromVal <900 && yesorno <= 2.5){ //if dont shoot and dont surrender
-    countdown();
+    countdownfast();
     println ("he ran AWAY!");
     image(town,0,0,1450,900);
     image(dash, 525, 325);
     println("countdownfast");
-    countdownfast();
     println("he ran away");
     println("VAL" + val + " VAL INT " + fromVal + " Evilness "+ yesorno);
     ONEescape++;
@@ -280,8 +281,7 @@ if (counter==3){
    image(opo5X, 500,200,400,400);//
    
    //removed countdownfast
-   countdownfast();
-   println("countdownfast X2");
+
    println("shot a peacemaker");
    badcop++;
    //removed countdown
@@ -298,7 +298,7 @@ if (counter==3){
    image(opo5X, 500,200,400,400);//
    
    println("countdownfast");
-   countdownfast();
+   
    ONEgot++;
    counter=1;
    roundcounter++;
@@ -325,7 +325,7 @@ if (counter==3){
    image(opo55, 500,200,400,400);//
    
    counter=100;
-   countdown();
+   
    
    }
    if (counter==5 && fromVal==5000.0){
@@ -352,16 +352,41 @@ if (counter==3){
    image(opo5X, 500,200,400,400);//
    
    println("shot a villain");
-    countdown();
+   
+
     ONEgot=1;
     counter=1;
     roundcounter++;
+    
+     
    }
    else
    {
      counter=100;//sends to LOSE screen
    }
    }
+   
+     if (mousePressed == true && roundcounter==6 && counter==1){
+    delay(1000);
+   
+    if (badcop>goodcop){
+        image(town,0,0,1450,900);
+        image(bB1,525,250,450,450);
+        counter=0;
+    }
+     if (badcop<goodcop){
+        image(town,0,0,1450,900);
+        image(b1, 525,250,450,450);
+        counter=0;
+    }
+     if (badcop==goodcop){
+        image(town,0,0,1450,900);
+        image(badge, 525,250,450,450);
+        counter=0;
+    }
+    counter=-1;
+    
+  }
      
    
    if (counter==100){//OPO1 LOSE screen
@@ -387,7 +412,7 @@ if (counter==3){
    if (counter==120){//LOSE SCREEN
    image(youlose,0,0,1450,900);
    image(youlosetext,400,600);
-     counter=0;
+     counter=-1;
    }
    
    }
@@ -429,6 +454,12 @@ void stop()
   m.stop();
   super.stop();
 }
+
+
+
+
+
+
 
 
 
